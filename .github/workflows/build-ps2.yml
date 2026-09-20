@@ -11,8 +11,18 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: h4570/tyra
     timeout-minutes: 45
+
     steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y git make python3 genisoimage
+
+      - name: Set git safe directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -27,23 +37,16 @@ jobs:
           rm -rf tyra/tutorials/12-mineps2
           cp -R MinePS2_Basic tyra/tutorials/12-mineps2
 
-      - name: Build Tyra engine and MinePS2 ELF
-        run: |
-          docker pull h4570/tyra:latest
-          docker run --rm \
-            -v "$PWD/tyra:/src" \
-            h4570/tyra:latest \
-            /bin/bash -lc "cd /src/engine && make && cd /src/tutorials/12-mineps2 && make"
+      - name: Build Tyra engine
+        run: make clean all -C tyra/engine
+
+      - name: Build MinePS2 ELF
+        run: make clean all -C tyra/tutorials/12-mineps2
 
       - name: Verify ELF
         run: |
           test -f tyra/tutorials/12-mineps2/bin/mineps2.elf
           ls -lh tyra/tutorials/12-mineps2/bin/mineps2.elf
-
-      - name: Install ISO builder
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y genisoimage
 
       - name: Build PS2 ISO
         run: |
@@ -51,15 +54,8 @@ jobs:
           mkdir -p iso_root
           cp tyra/tutorials/12-mineps2/bin/mineps2.elf iso_root/MINEPS2.ELF
           cp tyra/tutorials/12-mineps2/bin/*.png iso_root/
-          cat > iso_root/SYSTEM.CNF <<'EOF'
-          BOOT2 = cdrom0:\\MINEPS2.ELF;1
-          VER = 1.00
-          VMODE = NTSC
-          EOF
-          genisoimage -quiet -o MinePS2_TEST.iso \
-            -V MINEPS2 \
-            -iso-level 2 -J -R \
-            iso_root
+          printf 'BOOT2 = cdrom0:\\MINEPS2.ELF;1\nVER = 1.00\nVMODE = NTSC\n' > iso_root/SYSTEM.CNF
+          genisoimage -quiet -o MinePS2_TEST.iso -V MINEPS2 -iso-level 2 -J -R iso_root
           ls -lh MinePS2_TEST.iso
           sha256sum MinePS2_TEST.iso > MinePS2_TEST.iso.sha256
 
