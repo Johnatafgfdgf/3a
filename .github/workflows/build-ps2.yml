@@ -1,0 +1,75 @@
+name: Build MinePS2 ISO
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Generate game assets
+        run: python3 tools/gen_assets.py
+
+      - name: Clone Tyra
+        run: git clone --depth 1 https://github.com/h4570/tyra.git tyra
+
+      - name: Install project into Tyra tutorials
+        run: |
+          rm -rf tyra/tutorials/12-mineps2
+          cp -R MinePS2_Basic tyra/tutorials/12-mineps2
+
+      - name: Build Tyra engine and MinePS2 ELF
+        run: |
+          docker pull h4570/tyra:latest
+          docker run --rm \
+            -v "$PWD/tyra:/src" \
+            h4570/tyra:latest \
+            /bin/bash -lc "cd /src/engine && make && cd /src/tutorials/12-mineps2 && make"
+
+      - name: Verify ELF
+        run: |
+          test -f tyra/tutorials/12-mineps2/bin/mineps2.elf
+          ls -lh tyra/tutorials/12-mineps2/bin/mineps2.elf
+
+      - name: Install ISO builder
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y genisoimage
+
+      - name: Build PS2 ISO
+        run: |
+          rm -rf iso_root
+          mkdir -p iso_root
+          cp tyra/tutorials/12-mineps2/bin/mineps2.elf iso_root/MINEPS2.ELF
+          cp tyra/tutorials/12-mineps2/bin/*.png iso_root/
+          cat > iso_root/SYSTEM.CNF <<'EOF'
+          BOOT2 = cdrom0:\\MINEPS2.ELF;1
+          VER = 1.00
+          VMODE = NTSC
+          EOF
+          genisoimage -quiet -o MinePS2_TEST.iso \
+            -V MINEPS2 \
+            -iso-level 2 -J -R \
+            iso_root
+          ls -lh MinePS2_TEST.iso
+          sha256sum MinePS2_TEST.iso > MinePS2_TEST.iso.sha256
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MinePS2-PS2-test-build
+          path: |
+            MinePS2_TEST.iso
+            MinePS2_TEST.iso.sha256
+            tyra/tutorials/12-mineps2/bin/mineps2.elf
+          if-no-files-found: error
+          compression-level: 0
