@@ -76,29 +76,28 @@ void MinePS2Game::configureFullscreenSprite(Tyra::Sprite& sprite) {
 void MinePS2Game::loadAssets() {
   auto& repo = engine->renderer.getTextureRepository();
 
-  textureAtlas = repo.add(Tyra::FileUtils::fromCwd("ATLAS.PNG;1"));
+  textureAtlas = repo.add(Tyra::FileUtils::fromCwd("ATLAS.PNG"));
 
   for (int i = 0; i < 3; ++i) {
     configureFullscreenSprite(menuSprites[i]);
     char path[32];
     path[0] = 'M'; path[1] = 'E'; path[2] = 'N'; path[3] = 'U';
     path[4] = '_'; path[5] = static_cast<char>('0' + i); path[6] = '.';
-    path[7] = 'P'; path[8] = 'N'; path[9] = 'G'; path[10] = ';';
-    path[11] = '1'; path[12] = '\0';
+    path[7] = 'P'; path[8] = 'N'; path[9] = 'G'; path[10] = '\0';
     auto* tex = repo.add(Tyra::FileUtils::fromCwd(path));
     tex->addLink(menuSprites[i].id);
   }
 
   configureFullscreenSprite(controlsSprite);
-  auto* controlsTexture = repo.add(Tyra::FileUtils::fromCwd("CONTROLS.PNG;1"));
+  auto* controlsTexture = repo.add(Tyra::FileUtils::fromCwd("CONTROLS.PNG"));
   controlsTexture->addLink(controlsSprite.id);
 
   configureFullscreenSprite(aboutSprite);
-  auto* aboutTexture = repo.add(Tyra::FileUtils::fromCwd("ABOUT.PNG;1"));
+  auto* aboutTexture = repo.add(Tyra::FileUtils::fromCwd("ABOUT.PNG"));
   aboutTexture->addLink(aboutSprite.id);
 
   configureFullscreenSprite(pauseSprite);
-  auto* pauseTexture = repo.add(Tyra::FileUtils::fromCwd("PAUSE.PNG;1"));
+  auto* pauseTexture = repo.add(Tyra::FileUtils::fromCwd("PAUSE.PNG"));
   pauseTexture->addLink(pauseSprite.id);
 
   for (int i = 0; i < 6; ++i) {
@@ -106,8 +105,7 @@ void MinePS2Game::loadAssets() {
     char path[32];
     path[0] = 'H'; path[1] = 'U'; path[2] = 'D'; path[3] = '_';
     path[4] = static_cast<char>('0' + i); path[5] = '.';
-    path[6] = 'P'; path[7] = 'N'; path[8] = 'G'; path[9] = ';';
-    path[10] = '1'; path[11] = '\0';
+    path[6] = 'P'; path[7] = 'N'; path[8] = 'G'; path[9] = '\0';
     auto* tex = repo.add(Tyra::FileUtils::fromCwd(path));
     tex->addLink(hudSprites[i].id);
   }
