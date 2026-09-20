@@ -92,7 +92,7 @@ def stone_bg(w,h):
     return p
 
 def make_menu(sel):
-    w,h=640,448;p=stone_bg(w,h)
+    w,h=512,448;p=stone_bg(w,h)
     text(p,w,h,170,55,"MINE PS2",9,(235,235,235,255))
     labels=["JOGAR","CONTROLES","SOBRE"]
     for i,lab in enumerate(labels):
@@ -104,26 +104,26 @@ def make_menu(sel):
     return p
 
 for i in range(3):
-    png(os.path.join(OUT,f"menu_{i}.png"),640,448,make_menu(i))
+    png(os.path.join(OUT,f"menu_{i}.png"),512,448,make_menu(i))
 
-p=stone_bg(640,448)
-text(p,640,448,155,35,"CONTROLES",7)
+p=stone_bg(512,448)
+text(p,512,448,155,35,"CONTROLES",7)
 lines=["ANALOGICO E: MOVER","ANALOGICO D: OLHAR","X: PULAR","R2: QUEBRAR","L2: COLOCAR","L1/R1: BLOCO","L3: CORRER","START: PAUSA"]
-for i,s in enumerate(lines): text(p,640,448,95,130+i*34,s,3,(225,225,225,255))
-png(os.path.join(OUT,"controls.png"),640,448,p)
+for i,s in enumerate(lines): text(p,512,448,95,130+i*34,s,3,(225,225,225,255))
+png(os.path.join(OUT,"controls.png"),512,448,p)
 
-p=stone_bg(640,448)
-text(p,640,448,215,55,"SOBRE",7)
-text(p,640,448,88,160,"PROTOTIPO VOXEL PARA PS2",4)
-text(p,640,448,105,220,"FEITO COM TYRA + PS2SDK",3)
-text(p,640,448,135,290,"BUILD DE TESTE V0.1",3)
-png(os.path.join(OUT,"about.png"),640,448,p)
+p=stone_bg(512,448)
+text(p,512,448,215,55,"SOBRE",7)
+text(p,512,448,88,160,"PROTOTIPO VOXEL PARA PS2",4)
+text(p,512,448,105,220,"FEITO COM TYRA + PS2SDK",3)
+text(p,512,448,135,290,"BUILD DE TESTE V0.1",3)
+png(os.path.join(OUT,"about.png"),512,448,p)
 
-p=stone_bg(640,448)
-text(p,640,448,205,90,"PAUSADO",7)
-text(p,640,448,140,230,"START/X: CONTINUAR",4)
-text(p,640,448,175,290,"O: MENU",4)
-png(os.path.join(OUT,"pause.png"),640,448,p)
+p=stone_bg(512,448)
+text(p,512,448,205,90,"PAUSADO",7)
+text(p,512,448,140,230,"START/X: CONTINUAR",4)
+text(p,512,448,175,290,"O: MENU",4)
+png(os.path.join(OUT,"pause.png"),512,448,p)
 
 # Atlas 16x16 tiles in a 256x256 texture.
 p=canvas(256,256,(0,0,0,0))
@@ -146,7 +146,7 @@ png(os.path.join(OUT,"atlas.png"),256,256,p)
 
 # HUD: transparent overlay, crosshair and hotbar.
 for sel in range(6):
-    w,h=640,448;p=canvas(w,h,(0,0,0,0))
+    w,h=512,448;p=canvas(w,h,(0,0,0,0))
     cx,cy=w//2,h//2
     rect(p,w,h,cx-10,cy-1,cx+11,cy+2,(255,255,255,220))
     rect(p,w,h,cx-1,cy-10,cx+2,cy+11,(255,255,255,220))
