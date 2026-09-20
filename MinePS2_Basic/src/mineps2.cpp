@@ -76,36 +76,38 @@ void MinePS2Game::configureFullscreenSprite(Tyra::Sprite& sprite) {
 void MinePS2Game::loadAssets() {
   auto& repo = engine->renderer.getTextureRepository();
 
-  textureAtlas = repo.add(Tyra::FileUtils::fromCwd("atlas.png"));
+  textureAtlas = repo.add(Tyra::FileUtils::fromCwd("ATLAS.PNG;1"));
 
   for (int i = 0; i < 3; ++i) {
     configureFullscreenSprite(menuSprites[i]);
     char path[32];
-    path[0] = 'm'; path[1] = 'e'; path[2] = 'n'; path[3] = 'u';
+    path[0] = 'M'; path[1] = 'E'; path[2] = 'N'; path[3] = 'U';
     path[4] = '_'; path[5] = static_cast<char>('0' + i); path[6] = '.';
-    path[7] = 'p'; path[8] = 'n'; path[9] = 'g'; path[10] = '\0';
+    path[7] = 'P'; path[8] = 'N'; path[9] = 'G'; path[10] = ';';
+    path[11] = '1'; path[12] = '\0';
     auto* tex = repo.add(Tyra::FileUtils::fromCwd(path));
     tex->addLink(menuSprites[i].id);
   }
 
   configureFullscreenSprite(controlsSprite);
-  auto* controlsTexture = repo.add(Tyra::FileUtils::fromCwd("controls.png"));
+  auto* controlsTexture = repo.add(Tyra::FileUtils::fromCwd("CONTROLS.PNG;1"));
   controlsTexture->addLink(controlsSprite.id);
 
   configureFullscreenSprite(aboutSprite);
-  auto* aboutTexture = repo.add(Tyra::FileUtils::fromCwd("about.png"));
+  auto* aboutTexture = repo.add(Tyra::FileUtils::fromCwd("ABOUT.PNG;1"));
   aboutTexture->addLink(aboutSprite.id);
 
   configureFullscreenSprite(pauseSprite);
-  auto* pauseTexture = repo.add(Tyra::FileUtils::fromCwd("pause.png"));
+  auto* pauseTexture = repo.add(Tyra::FileUtils::fromCwd("PAUSE.PNG;1"));
   pauseTexture->addLink(pauseSprite.id);
 
   for (int i = 0; i < 6; ++i) {
     configureFullscreenSprite(hudSprites[i]);
     char path[32];
-    path[0] = 'h'; path[1] = 'u'; path[2] = 'd'; path[3] = '_';
+    path[0] = 'H'; path[1] = 'U'; path[2] = 'D'; path[3] = '_';
     path[4] = static_cast<char>('0' + i); path[5] = '.';
-    path[6] = 'p'; path[7] = 'n'; path[8] = 'g'; path[9] = '\0';
+    path[6] = 'P'; path[7] = 'N'; path[8] = 'G'; path[9] = ';';
+    path[10] = '1'; path[11] = '\0';
     auto* tex = repo.add(Tyra::FileUtils::fromCwd(path));
     tex->addLink(hudSprites[i].id);
   }
